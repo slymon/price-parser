@@ -37,6 +37,7 @@ class Price:
         from ``currency_hint`` string.
         """
         amount_text = extract_price_text(price) if price is not None else None
+        amount_text = convert_mio(price, amount_text) if 'mio' in price.lower() else amount_text
         amount_num = parse_number(amount_text) if amount_text is not None else None
         currency = extract_currency_symbol(price, currency_hint)
         if currency is not None:
@@ -145,6 +146,23 @@ def extract_currency_symbol(price: Optional[str],
             return m.group(0)
 
     return None
+
+
+def convert_mio(s, price_text):
+    #extract thousands separator
+    separator = re.findall(r'\D', str(price_text))[0]
+    
+    #count digits without whitespaces after mio 
+    splitted_s = str(price_text).split(separator)
+    amount_of_digits = len(splitted_s[len(splitted_s) - 1])
+    
+    price_text = price_text.replace(separator, '')
+    
+    #for mio add (6 - amount of digits) after 
+    after_separator = 6 - amount_of_digits
+    for zero in range(0, after_separator):
+        price_text+= "0"
+    return price_text
 
 
 def extract_price_text(price: str) -> Optional[str]:
@@ -283,3 +301,4 @@ def parse_number(num: str) -> Optional[Decimal]:
         return Decimal(num)
     except InvalidOperation:
         return None
+        

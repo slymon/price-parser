@@ -1969,8 +1969,7 @@ PRICE_PARSING_EXAMPLES_XFAIL = [
     [[e] for e in PRICE_PARSING_EXAMPLES_3] +
     [[e] for e in PRICE_PARSING_EXAMPLES_NO_PRICE] +
     [[e] for e in PRICE_PARSING_EXAMPLES_NO_CURRENCY] +
-    [pytest.param(e, marks=pytest.mark.xfail())
-     for e in PRICE_PARSING_EXAMPLES_XFAIL]
+    [pytest.param(e, marks=pytest.mark.xfail()) for e in PRICE_PARSING_EXAMPLES_XFAIL]
 )
 def test_parsing(example: Example):
     parsed = Price.fromstring(example.price_raw, example.currency_raw)
